@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Calculate CPU Devices
+NUM_CPUS=$(nproc)
+[ "$NUM_CPUS" != 0 ] || NUM_CPUS=1
+
+# Limit CPUs to 4
+if [ $NUM_CPUS -ge 4 ]
+then
+  NUM_DEVS=4
+else
+  NUM_DEVS=$NUM_CPUS
+fi
+
+# calculate File size from RAM size
+FACTOR=75       # percentage
+MAXSIZE=8388608 # max. 8 GB zram
+TOTALRAM=$(($(grep MemTotal /proc/meminfo | awk ' { print $2 } ')*$FACTOR/100))
+
+# if TOTALRAM greater than 8 GB set to max 8 GB
+if [ $TOTALRAM -ge $MAXSIZE ]
+then
+  TOTALRAM=$MAXSIZE
+fi
+
+# divide by CPU Count
+DISK_SIZE=$(($TOTALRAM/$NUM_DEVS*1024))
+
+start() {
+  [ ! -e /sys/module/zram ] && modprobe zram num_devices=$NUM_DEVS || modprobe -r zram && modprobe zram num_devices=$NUM_DEVS
+  for i in /sys/block/zram*; do
+    /usr/bin/echo $DISK_SIZE > ${i}/disksize;
+  done
+
+  for i in /dev/zram*; do
+    /usr/sbin/mkswap ${i};
+    /usr/sbin/swapon -d -p100 ${i};
+  done
+}
+
+stop() {
+  [ ! -e /sys/module/zram ] && exit 0
+
+  for i in /dev/zram*; do
+    /usr/sbin/swapoff ${i};
+  done
+
+  for i in /sys/block/zram*; do
+    /usr/bin/echo 1 > ${i}/reset;
+  done
+  [ -e /sys/module/zram ] && modprobe -r zram
+}
+
+case $1 in
+  (start|stop) "$1" ;;
+esac

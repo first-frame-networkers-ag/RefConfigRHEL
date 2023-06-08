@@ -1,0 +1,31 @@
+---
+# Referenzkonfiguration gemäss qWiki:
+# <https://prozesse.firstframe.net/bin/view/Vorgaben/BasicConfigurationForRHEL8>
+
+# Stand: 26.01.2022, qWiki v3 Rev 82
+
+# Startmöglichkeiten
+
+# ohne Tag: Ausführung für first365, alles wird ausgeführt, je nach OS implementiert
+# Tag "basics": Nur Basis Konfiguration für OS Template, welches auch bei Kunden verwendet wird
+
+##########################################################################################
+
+- name: RHEL Base Configuration
+  hosts: all
+  gather_facts: true
+  become: yes
+  
+  roles:
+
+    - role: configure-base-rhel
+      tags: configure-base-rhel
+
+    - role: configure-ssh
+      tags: configure-ssh
+
+    - role: configure-zram
+      tags: configure-zram
+
+    - role: configure-snmp
+      tags: configure-snmp

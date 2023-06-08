@@ -1,0 +1,10 @@
+# --------------------------------------------------------------------------------
+- name: Restart systemd-journald
+  ansible.builtin.systemd:
+    name: systemd-journald.service
+    state: restarted
+
+- name: Restart chronyd
+  ansible.builtin.systemd:
+    name: chronyd.service
+    state: restarted

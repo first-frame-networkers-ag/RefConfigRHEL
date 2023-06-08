@@ -1,0 +1,6 @@
+# --------------------------------------------------------------------------------
+- name: Restart zram.service
+  ansible.builtin.systemd:
+    name: zram.service
+    enabled: yes
+    state: restarted

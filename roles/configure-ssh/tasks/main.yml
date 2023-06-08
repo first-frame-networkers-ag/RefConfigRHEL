@@ -1,0 +1,55 @@
+# --------------------------------------------------------------------------------
+- name: sshd_config Deny Root Login
+  tags: configure-ssh
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin no'
+  notify:
+    - Restart ssh
+
+- name: sshd_config ClientAliveInterval
+  tags: configure-ssh
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?ClientAliveInterval'
+    line: 'ClientAliveInterval 1200'
+  notify:
+    - Restart ssh
+
+- name: sshd_config ClientAliveCountMax
+  tags: configure-ssh
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?ClientAliveCountMax'
+    line: 'ClientAliveCountMax 0'
+  notify:
+    - Restart ssh
+
+- name: sshd_config UseDNS
+  tags: configure-ssh
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?UseDNS'
+    line: 'UseDNS no'
+  notify:
+    - Restart ssh
+
+# -------------------------------------------------------------------------------
+- name: Create issue.net without Logo
+  ansible.builtin.copy:
+    backup: yes
+    dest: /etc/issue.net
+    content: |
+      Unauthorized access to this machine is prohibited
+      Press <Ctrl-D> if you are not an authorized user
+
+# --------------------------------------------------------------------------------
+- name: sshd_config enable Banner
+  tags: basics
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?Banner'
+    line: 'Banner /etc/issue.net'
+  notify:
+    - Restart ssh

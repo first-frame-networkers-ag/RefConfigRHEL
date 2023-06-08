@@ -1,0 +1,65 @@
+# --------------------------------------------------------------------------------
+- name: Remove Software
+  yum:
+    name: 
+      - cockpit*
+    state: absent
+
+- name: Firewall disable cockpit
+  ansible.posix.firewalld:
+    service: cockpit
+    permanent: yes
+    state: disabled
+
+# --------------------------------------------------------------------------------
+- name: Install Software
+  yum:
+    name: 
+      - python3-pip
+      - git
+      - vim
+      - nano
+      - tree
+      - ncdu
+      - figlet
+      - wget
+      - curl
+      - tmux
+      - jq
+      - tar
+      - mc
+    update_cache: true
+    enablerepo: epel
+    state: present
+
+# --------------------------------------------------------------------------------
+- name: systemd-journal persistent logging
+  ansible.builtin.file:
+    path: /var/log/journal
+    owner: root
+    group: systemd-journal
+    state: directory
+
+- name: Configure BASH Auto-Logout after 1200s
+  ansible.builtin.copy:
+    dest: /etc/profile.d/ffn_bash-timeout.sh
+    content: |
+      # Auto logout after 20 minutes
+      export TMOUT=1200
+
+# --------------------------------------------------------------------------------
+- name: Chrony Configuration
+  tags: chrony-config
+  ansible.builtin.copy:
+    dest: /etc/chrony.conf
+    backup: yes
+    content: |
+      server {{timeserver}}
+      driftfile /var/lib/chrony/drift
+      makestep 1.0 3
+      rtcsync
+      keyfile /etc/chrony.keys
+      leapsectz right/UTC
+      logdir /var/log/chrony
+  notify:
+    - Restart chronyd

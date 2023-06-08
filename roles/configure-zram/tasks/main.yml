@@ -1,0 +1,23 @@
+# --------------------------------------------------------------------------------
+- name: zram Setup Block
+  block:
+    - name: Create zram Script
+      ansible.builtin.copy:
+        src: zram
+        dest: /etc/systemd/system/zram
+        mode: '775'
+      notify: Restart zram.service
+
+    - name: Create zram Service file
+      ansible.builtin.copy:
+        src: zram.service
+        dest: /etc/systemd/system/zram.service
+        mode: '664'
+
+    - name: Configure Service
+      ansible.builtin.systemd:
+        name: zram.service
+        state: started
+        enabled: yes
+        daemon_reload: yes
+  when: ansible_facts['distribution_major_version'] | int >= 8

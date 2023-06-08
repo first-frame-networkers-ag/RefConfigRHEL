@@ -1,0 +1,34 @@
+- name: Install net-snmp
+  dnf:
+    name: net-snmp
+    state: present
+
+- name: permit traffic for snmpd
+  firewalld:
+    service: snmp
+    permanent: yes
+    state: enabled
+
+- name: Enable service snmpd
+  service:
+    name: snmpd
+    enabled: yes
+    state: started
+
+- name: Copy snmpd Configuration
+  ansible.builtin.copy:
+    dest: /etc/snmp/snmpd.conf
+    backup: yes
+    content: |
+      group   notConfigGroup  v1        notConfigUser
+      group   notConfigGroup  v2c       notConfigUser
+      view    systemview      included  .1
+      view    systemview      included  .1.3.6.1.2.1.1
+      view    systemview      included  .1.3.6.1.2.1.25.1.1
+      access  notConfigGroup  ""        any       noauth    exact  systemview none none
+      com2sec notConfigUser  default    {{snmpcommunity}}
+      syslocation Unknown (edit /etc/snmp/snmpd.conf)
+      syscontact Root <root@localhost> (configure /etc/snmp/snmp.local.conf)
+      dontLogTCPWrappersConnects yes
+  notify:
+    - Restart snmpd

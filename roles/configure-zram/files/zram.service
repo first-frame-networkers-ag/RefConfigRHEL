@@ -1,0 +1,11 @@
+[Unit]
+Description=Zram-based swap (compressed RAM block devices)
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /etc/systemd/system/zram start
+ExecStop=/bin/bash /etc/systemd/system/zram stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
