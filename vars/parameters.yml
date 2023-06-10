@@ -1,0 +1,4 @@
+# Change this for your environment
+---
+timeserver: ch.pool.ntp.org
+snmpcommunity: usethis

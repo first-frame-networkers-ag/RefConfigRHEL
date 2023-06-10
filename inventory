@@ -3,8 +3,3 @@
 localhost            ansible_connection=local
 #other1.example.com   ansible_connection=ssh
 #other2.example.com   ansible_connection=ssh     ansible_user=myotheruser
-
-# Change this for your environment
-[targets:vars]
-timeserver=ch.pool.ntp.org
-snmpcommunity=usethis
