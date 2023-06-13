@@ -13,5 +13,5 @@ Before applying this Playbook make sure you've checked the `inventory` file for 
 Apply Playbook:
 
 ```bash
-ansible-playbook -i inventory/linuxhosts.yml -l SERVER1 -k -t basics apply.yml
+ansible-playbook apply.yml
 ```
