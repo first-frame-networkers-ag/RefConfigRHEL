@@ -13,5 +13,9 @@ Before applying this Playbook make sure you've checked the `inventory` file for 
 Apply Playbook:
 
 ```bash
+# Ausführung mit den Hosts aus Datei "inventory"
 ansible-playbook apply.yml
+
+# adhoc Ausführung auf localhost
+ansible-playbook -i localhost, -c local apply.yml
 ```
