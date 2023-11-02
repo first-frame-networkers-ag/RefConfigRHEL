@@ -16,6 +16,7 @@
     state: started
 
 - name: Copy snmpd Configuration
+  when: "'first365' not in ansible_run_tags" # handled in play_first365config
   ansible.builtin.copy:
     dest: /etc/snmp/snmpd.conf
     backup: yes

@@ -58,6 +58,7 @@
 
 - name: Chrony Configuration
   tags: chrony-config
+  when: "'first365' not in ansible_run_tags" # handled in play_first365config
   ansible.builtin.copy:
     dest: /etc/chrony.conf
     backup: yes
