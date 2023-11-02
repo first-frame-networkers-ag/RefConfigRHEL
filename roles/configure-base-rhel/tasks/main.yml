@@ -72,3 +72,8 @@
       logdir /var/log/chrony
   notify:
     - Restart chronyd
+
+- name: Configure SELinux
+  ansible.posix.selinux:
+    policy: targeted
+    state: enforcing
