@@ -2,3 +2,4 @@
 ---
 timeserver: ch.pool.ntp.org
 snmpcommunity: usethis
+allowed_os_family: ["RedHat", "Rocky"]

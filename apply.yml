@@ -10,12 +10,16 @@
 
     - role: configure-base-rhel
       tags: [allRoles, configure-base-rhel]
+      when: ansible_os_family in allowed_os_family
 
     - role: configure-ssh
       tags: [allRoles, configure-ssh]
+      when: ansible_os_family in allowed_os_family
 
     - role: configure-zram
       tags: [allRoles, configure-zram]
+      when: ansible_os_family in allowed_os_family
 
     - role: configure-snmp
       tags: [allRoles, configure-snmp]
+      when: ansible_os_family in allowed_os_family
