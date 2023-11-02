@@ -1,5 +1,5 @@
 - name: Install net-snmp
-  dnf:
+  yum:
     name: net-snmp
     state: present
 
